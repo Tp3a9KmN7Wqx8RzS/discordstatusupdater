@@ -40,4 +40,4 @@ const updateStatus = async () => {
 updateStatus();
 
 // Regular interval updates
-setInterval(updateStatus, 2900); // Update every 2.9 seconds
+setInterval(updateStatus, 3500); // Update every 2.9 seconds
