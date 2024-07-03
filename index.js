@@ -25,19 +25,20 @@ const updateStatus = async () => {
             }
         );
         console.log(`Status updated to: ${status.text}`);
+        // Wait for 2.9 seconds before updating the status again
+        setTimeout(updateStatus, 2900);
     } catch (error) {
         if (error.response && error.response.status === 429) {
-            const retryAfter = error.response.headers['retry-after'];
+            const retryAfter = error.response.headers['retry-after'] * 1000;
             console.error(`Rate limited. Retrying after ${retryAfter} milliseconds.`);
             setTimeout(updateStatus, retryAfter);
         } else {
             console.error(`Error updating status: ${error.message}`);
+            // Retry after a default delay if an error occurs
+            setTimeout(updateStatus, 5000);
         }
     }
 };
 
 // Initial update
 updateStatus();
-
-// Regular interval updates
-setInterval(updateStatus, 3500); // Update every 2.9 seconds
