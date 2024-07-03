@@ -26,11 +26,18 @@ const updateStatus = async () => {
         );
         console.log(`Status updated to: ${status.text}`);
     } catch (error) {
-        console.error(`Error updating status: ${error.message}`);
+        if (error.response && error.response.status === 429) {
+            const retryAfter = error.response.headers['retry-after'];
+            console.error(`Rate limited. Retrying after ${retryAfter} milliseconds.`);
+            setTimeout(updateStatus, retryAfter);
+        } else {
+            console.error(`Error updating status: ${error.message}`);
+        }
     }
 };
 
-setInterval(updateStatus, 2900); // Update every 2.9 seconds
-
 // Initial update
 updateStatus();
+
+// Regular interval updates
+setInterval(updateStatus, 2900); // Update every 2.9 seconds
